@@ -107,4 +107,3 @@ Le jeu a été développé avec ces principes à l'esprit :
 
 ## Licence
 
-Ce projet est sous licence MIT - voir le fichier LICENSE pour plus de détails.
