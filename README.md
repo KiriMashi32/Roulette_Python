@@ -103,7 +103,7 @@ Le jeu est construit avec une architecture modulaire comprenant ces composants p
 
 Le jeu a été construit autour de ces éléments clés :
 
-1. **Retour immédiat** : Sons et animations pour chaque action du joueur
+1. **Retour immédiat** : Musique de fond et animations pour chaque action du joueur
 2. **Défi croissant** : Le temps disponible pour taper les mots diminue de 0.1 seconde après chaque mot réussi
 3. **Solidité technique** : Système résistant aux erreurs de saisie et aux actions imprévues
 4. **Expérience fluide** : Animations et interactions optimisées pour éviter les ralentissements
