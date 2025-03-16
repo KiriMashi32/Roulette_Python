@@ -28,6 +28,7 @@ GRAY = (149, 165, 166)
 RED = (231, 76, 60)
 BLACK = (0, 0, 0)
 
+
 # Score file
 SCORES_FILE = "web/scores.json"
 
