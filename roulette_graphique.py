@@ -360,7 +360,8 @@ class Game:
         self.challenge_word = ""
         self.challenge_input = ""
         self.challenge_timer = 0
-        self.challenge_time_limit = 5
+        self.initial_challenge_time_limit = 5  # Temps initial de base
+        self.challenge_time_limit = self.initial_challenge_time_limit  # Temps actuel qui va diminuer
         
         self.api_url = "https://random-word-api.herokuapp.com/word?number=1&lang=fr"
         
@@ -689,7 +690,7 @@ class Game:
         self.challenge_word = self.get_random_word() or random.choice(self.french_words)
         self.challenge_input = ""
         self.challenge_timer = pygame.time.get_ticks()
-        self.challenge_time_limit = 5
+        # Ne pas réinitialiser le temps limite ici, utiliser la valeur actuelle
         self.play_sound("event")
         current_nickname = self.player1_nickname if self.joueur == 1 else self.player2_nickname
         self.event_log.add_message(f"{current_nickname}: Écrivez '{self.challenge_word}' pour survivre!")
@@ -713,6 +714,27 @@ class Game:
             # Réactiver le bouton "TIRER" si le jeu n'est pas terminé
             if not self.game_over:
                 self.tirer_button.set_active(True)
+        elif self.challenge_input.lower() == self.challenge_word.lower():
+            self.word_challenge_active = False
+            self.challenge_input = ""
+            self.play_sound("win")
+            current_nickname = self.player1_nickname if self.joueur == 1 else self.player2_nickname
+            self.event_log.add_message(f"Défi réussi! {current_nickname} survit au tir!")
+            
+            self.joueur = 2 if self.joueur == 1 else 1
+            next_nickname = self.player1_nickname if self.joueur == 1 else self.player2_nickname
+            self.event_log.add_message(f"C'est au tour de {next_nickname}.")
+            
+            # Réactiver le bouton "TIRER"
+            self.tirer_button.set_active(True)
+            
+            # Soustraire 1 seconde au temps restant et l'afficher
+            self.challenge_time_limit = max(1, self.challenge_time_limit - 1)  # Ne pas descendre en dessous de 1 seconde
+            self.event_log.add_message(f"Temps pour le prochain défi: {self.challenge_time_limit:.1f}s")
+    
+        # Mise à jour immédiate de l'affichage
+        self.draw()
+        pygame.display.flip()
     
     def restart(self):
         self.game_started = False
@@ -731,6 +753,9 @@ class Game:
         
         self.animations["fade_alpha"] = 0
         self.animations["shake_amount"] = 0
+        
+        self.challenge_time_limit = self.initial_challenge_time_limit
+        self.event_log.add_message(f"Temps de défi réinitialisé à {self.initial_challenge_time_limit} secondes")
         
         self.event_log.add_message("Nouvelle partie ! Entrez le nombre de balles et cliquez sur COMMENCER.")
         
@@ -970,6 +995,10 @@ class Game:
                     self.play_sound("win")
                     current_nickname = self.player1_nickname if self.joueur == 1 else self.player2_nickname
                     self.event_log.add_message(f" Défi réussi! {current_nickname} survit au tir!")
+                    
+                    # Soustraire 1 seconde au temps restant et l'afficher
+                    self.challenge_time_limit = max(1, self.challenge_time_limit - 0.1)  # Ne pas descendre en dessous de 1 seconde
+                    self.event_log.add_message(f"Temps pour le prochain défi: {self.challenge_time_limit:.1f}s")
                     
                     self.joueur = 2 if self.joueur == 1 else 1
                     next_nickname = self.player1_nickname if self.joueur == 1 else self.player2_nickname
