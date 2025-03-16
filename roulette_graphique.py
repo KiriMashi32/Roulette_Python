@@ -3,6 +3,7 @@ import sys
 import random
 import json
 import os
+import requests
 from datetime import datetime
 
 # Base configuration
@@ -360,6 +361,8 @@ class Game:
         self.challenge_timer = 0
         self.challenge_time_limit = 5
         
+        self.api_url = "https://random-word-api.herokuapp.com/word?number=1&lang=fr"
+        
         self.french_words = [
             "bonjour", "merci", "voiture", "maison", "chat", "chien", "livre",
             "bibliothèque", "restaurant", "université", "appartement", "ordinateur",
@@ -371,6 +374,7 @@ class Game:
             "laboratoire", "magnétique", "neurologie", "orthographe", "pneumonie",
             "quintessence", "révolution", "synchroniser", "technologie", "ultraviolet"
         ]
+
 
         self.sounds = load_sounds()
         self.music_enabled = True
@@ -664,10 +668,24 @@ class Game:
         sauvegarder_scores(self.data)
         
         self.event_log.add_message("Partie terminée ! Cliquez sur REJOUER pour une nouvelle partie.")
+        
+        
+    def get_random_word(self):
+        try:
+            response = requests.get(self.api_url)
+            if response.status_code == 200:
+                word = response.json()[0]
+                return word
+            else:
+                print(f"Error fetching word: {response.status_code}")
+                return None
+        except Exception as e:
+            print(f"Exception fetching word: {e}")
+            return None
     
     def start_word_challenge(self):
         self.word_challenge_active = True
-        self.challenge_word = random.choice(self.french_words)
+        self.challenge_word = self.get_random_word() or random.choice(self.french_words)
         self.challenge_input = ""
         self.challenge_timer = pygame.time.get_ticks()
         self.challenge_time_limit = 5
@@ -857,8 +875,9 @@ class Game:
             player1_label = font.render("Joueur 1:", True, BLUE)
             player2_label = font.render("Joueur 2:", True, RED)
     
-            SCREEN.blit(player1_label, (input_box.x + 50, 210))
-            SCREEN.blit(player2_label, (input_box.x + 50, 280))
+            # Dessiner les noms des joueurs à gauche des zones de texte
+            SCREEN.blit(player1_label, (input_box.x + 10, 210))
+            SCREEN.blit(player2_label, (input_box.x + 10, 280))
     
             self.player1_nickname_input.draw(SCREEN)
             self.player2_nickname_input.draw(SCREEN)
