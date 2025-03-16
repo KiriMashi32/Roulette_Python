@@ -105,5 +105,3 @@ Le jeu a été développé avec ces principes à l'esprit :
 3. **Tolérance aux erreurs** : Gestion robuste des erreurs pour les entrées utilisateur inattendues
 4. **Performance** : Rendu et gestion des événements optimisés pour un gameplay fluide
 
-## Licence
-
