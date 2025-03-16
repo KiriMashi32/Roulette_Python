@@ -26,7 +26,7 @@ html_content = '''
             display: flex;
             flex-direction: column;
             align-items: center;
-        }²
+        }
         
         h1 {
             color: #e74c3c;
@@ -164,7 +164,9 @@ html_content = '''
             sortedScores.forEach((item, index) => {
                 const row = table.insertRow(-1);
                 row.insertCell(0).textContent = index + 1;
-                row.insertCell(1).textContent = 'Joueur ' + item.joueur;
+                // Afficher le vrai nom du joueur ou "Joueur X" pour les anciens scores
+                const displayName = isNaN(item.joueur) ? item.joueur : 'Joueur ' + item.joueur;
+                row.insertCell(1).textContent = displayName;
                 row.insertCell(2).textContent = item.score;
             });
         }
@@ -181,14 +183,27 @@ html_content = '''
             recentGames.forEach(game => {
                 const row = table.insertRow(-1);
                 row.insertCell(0).textContent = game.date;
-                row.insertCell(1).textContent = game.scores['1'] || 0;
-                row.insertCell(2).textContent = game.scores['2'] || 0;
                 
-                // Surligner le perdant (celui qui a un point)
-                if (game.scores['1'] > 0) {
+                // Trouver les noms des joueurs et leur score
+                const playerKeys = Object.keys(game.scores);
+                
+                // Première cellule joueur
+                const player1Key = playerKeys[0] || '1';
+                const player1Name = isNaN(player1Key) ? player1Key : 'Joueur ' + player1Key;
+                const player1Score = game.scores[player1Key] || 0;
+                row.insertCell(1).textContent = `${player1Name}: ${player1Score}`;
+                
+                // Deuxième cellule joueur
+                const player2Key = playerKeys[1] || '2';
+                const player2Name = isNaN(player2Key) ? player2Key : 'Joueur ' + player2Key;
+                const player2Score = game.scores[player2Key] || 0;
+                row.insertCell(2).textContent = `${player2Name}: ${player2Score}`;
+                
+                // Surligner le gagnant (celui qui a un point)
+                if (player1Score > 0) {
                     row.cells[1].classList.add('highlight');
                 }
-                if (game.scores['2'] > 0) {
+                if (player2Score > 0) {
                     row.cells[2].classList.add('highlight');
                 }
             });
