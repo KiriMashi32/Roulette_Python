@@ -6,7 +6,7 @@
 </div>
 
 <p align="center">
-  <em>Une version élégante et animée du jeu classique de la roulette russe créée avec PyGame</em>
+  <em>Une version graphique et animée du jeu classique de la roulette russe créée avec PyGame</em>
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@
 
 ## Fonctionnalités
 
-- **Expérience de jeu immersive** : Animations élégantes, effets sonores et retour visuel
+- **Expérience de jeu immersive** : Animations, musique de fond et retour visuel
 - **Mode deux joueurs** : Affrontez un ami avec des pseudos personnalisés
 - **Système de défi de mots** : Tapez rapidement des mots pour survivre face à une chambre chargée
 - **Scores persistants** : Suivez et sauvegardez les performances des joueurs sur plusieurs parties
