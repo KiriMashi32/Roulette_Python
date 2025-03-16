@@ -42,10 +42,7 @@ Roulette Russe Adventure offre une version moderne du concept classique de la ro
 
 ```bash
 # Clonez le dépôt
-git clone https://github.com/votrepseudo/roulette-russe-adventure.git
-
-# Naviguez vers le répertoire du projet
-cd roulette-russe-adventure
+git clone https://github.com/KiriMashi32/Roulette_Python
 
 # Installez les dépendances requises
 pip install pygame
