@@ -493,7 +493,7 @@ class Game:
         self.rejouer_button.set_active(False)
         
         self.nb_balles_textbox = TextBox(130, 150, 50, 30, max_chars=3)
-        self.nb_balles_textbox.text = "1"
+        self.nb_balles_textbox.text = "999"  # Définir la valeur par défaut à 999
         
         self.event_log = EventLog(250, 400, 600, 350)
         self.event_log.add_message("Bienvenue dans le jeu de la Roulette Russe !")
