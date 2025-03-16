@@ -1,39 +1,40 @@
 # Roulette Russe Adventure
 
 <div align="center">
+
   <img src="public/game-preview.png" alt="Aperçu du jeu" width="600"/>
 </div>
 
 <p align="center">
-  <em>Une version élégante et animée du classique jeu de roulette russe, développée avec PyGame</em>
+  <em>Une version élégante et animée du jeu classique de la roulette russe créée avec PyGame</em>
 </p>
 
 <p align="center">
-  <a href="#fonctionnalites">Fonctionnalités</a> •
+  <a href="#fonctionnalités">Fonctionnalités</a> •
   <a href="#gameplay">Gameplay</a> •
   <a href="#installation">Installation</a> •
   <a href="#architecture">Architecture</a> •
-  <a href="#informations-sur-le-developpement">Informations sur le développement</a>
+  <a href="#développement">Développement</a>
 </p>
 
 ## Fonctionnalités
 
-- **Expérience de jeu immersive** : Animations élégantes, effets sonores et retours visuels
+- **Expérience de jeu immersive** : Animations élégantes, effets sonores et retour visuel
 - **Mode deux joueurs** : Affrontez un ami avec des pseudos personnalisés
 - **Système de défi de mots** : Tapez rapidement des mots pour survivre face à une chambre chargée
-- **Score persistant** : Suivi et enregistrement des performances des joueurs sur plusieurs parties
+- **Scores persistants** : Suivez et sauvegardez les performances des joueurs sur plusieurs parties
 - **Journal d'événements dynamique** : Mises à jour du jeu en temps réel affichées dans une console défilante
-- **Contrôles de la musique personnalisables** : Réglez le volume ou activez/désactivez la musique de fond
+- **Contrôles musicaux personnalisables** : Ajustez le volume ou activez/désactivez la musique de fond
 
 ## Gameplay
 
-Roulette Russe Adventure propose une version moderne du concept classique de la roulette russe :
+Roulette Russe Adventure offre une version moderne du concept classique de la roulette russe :
 
-1. **Préparation** : Les joueurs saisissent leurs pseudos et choisissent le nombre de balles dans le barillet
-2. **Tour par tour** : Les joueurs tirent à tour de rôle sur la gâchette d’un revolver virtuel
-3. **Défi de mots** : Face à une chambre chargée, les joueurs doivent taper rapidement un mot affiché pour survivre
-4. **Système de score** : Les joueurs gagnent des points en survivant, tandis que leurs adversaires sont éliminés
-5. **Classement global** : Les performances sont suivies sur plusieurs sessions grâce à un classement persistant
+1. **Configuration** : Les joueurs entrent leurs pseudos et sélectionnent le nombre de balles pour la partie
+2. **Tour par tour** : Les joueurs alternent pour appuyer sur la détente d'un revolver virtuel
+3. **Défi de mots** : Face à une chambre chargée, les joueurs doivent rapidement taper un mot affiché pour survivre
+4. **Score** : Les joueurs gagnent des points lorsque leurs adversaires sont éliminés
+5. **Classement global** : Les performances sont suivies à travers les sessions dans un tableau des scores persistant
 
 <div align="center">
   <img src="public/gameplay-diagram.png" alt="Diagramme de gameplay" width="650"/>
@@ -42,50 +43,72 @@ Roulette Russe Adventure propose une version moderne du concept classique de la 
 ## Installation
 
 ```bash
-# Cloner le dépôt
-git clone https://github.com/yourusername/roulette-russe-adventure.git
+# Clonez le dépôt
+git clone https://github.com/votrepseudo/roulette-russe-adventure.git
 
-# Aller dans le répertoire du projet
+# Naviguez vers le répertoire du projet
 cd roulette-russe-adventure
 
-# Installer les dépendances requises
+# Installez les dépendances requises
 pip install pygame
 
-# Lancer le jeu
+# Lancez le jeu
 python main.py
 ```
 
 ## Architecture
 
-Le jeu repose sur une architecture modulaire comprenant les composants principaux suivants :
+Le jeu est construit avec une architecture modulaire comprenant ces composants principaux :
 
 - **Classe Game** : Contrôleur central gérant l'état et la logique du jeu
 - **Classe Player** : Gère la représentation et les animations des joueurs
-- **Composants UI** : Classes Button, TextBox et EventLog pour l’interface utilisateur
-- **Système d’animation** : Gère les effets visuels comme le recul, les secousses d’écran et les transitions
-- **Stockage persistant** : Système basé sur JSON pour sauvegarder les scores et l’historique du jeu
+- **Composants UI** : Classes Button, TextBox et EventLog pour l'interface
+- **Système d'animation** : Gère les effets visuels comme le recul, les secousses d'écran et les transitions
+- **Stockage persistant** : Système basé sur JSON pour sauvegarder les scores et l'historique des parties
 
 ### Diagramme de classes
 
 ```
-┐─────────────┘      ┐─────────────┘      ┐─────────────┘
-|    Game     |◄────|   Player   |      |   Button     |
-|─────────────|      |─────────────|      |─────────────|
-| - barillet  |      | - x, y     |      | - rect       |
-| - joueur    |      | - angle    |      | - color      |
-| - scores    |      | - image    |      | - text       |
-|─────────────|      |─────────────|      |─────────────|
-| + shoot()   |      | + draw()   |      | + draw()     |
-| + restart() |      | + reset()  |      | + is_hovered |
-└─────────────┘      └─────────────┘      └─────────────┘
+┌─────────────┐      ┌────────────┐      ┌──────────────┐
+│    Game     │◄─────┤   Player   │      │   Button     │
+├─────────────┤      ├────────────┤      ├──────────────┤
+│ - barillet  │      │ - x, y     │      │ - rect       │
+│ - joueur    │      │ - angle    │      │ - color      │
+│ - scores    │      │ - image    │      │ - text       │
+├─────────────┤      ├────────────┤      ├──────────────┤
+│ + shoot()   │      │ + draw()   │      │ + draw()     │
+│ + restart() │      │ + reset()  │      │ + is_hovered │
+└─────────────┘      └────────────┘      └──────────────┘
+      ▲                                          ▲
+      │                                          │
+      │               ┌─────────────┐            │
+      └───────────────┤  EventLog   ├────────────┘
+                      ├─────────────┤
+                      │ - messages  │
+                      │ - rect      │
+                      ├─────────────┤
+                      │ + draw()    │
+                      │ + add_msg() │
+                      └─────────────┘
 ```
 
-## Informations sur le développement
+## Développement
 
 ### Défis techniques
 
-- **Animations fluides** : Création de transitions naturelles entre les états du jeu
-- **Système de défi de mots** : Équilibrer la difficulté et le timing pour une survie basée sur les compétences
+- **Fluidité des animations** : Création de transitions fluides entre les états du jeu
+- **Système de défi de mots** : Équilibrage de la difficulté et du timing pour la survie basée sur les compétences
+- **Journal d'événements** : Conception d'une interface défilante réactive avec un impact minimal sur les performances
+- **Gestion des états** : Gestion des transitions entre plusieurs états du jeu sans problèmes
+
+### Philosophie de conception
+
+Le jeu a été développé avec ces principes à l'esprit :
+
+1. **Retour visuel** : Chaque action fournit une réponse visuelle et auditive immédiate
+2. **Difficulté progressive** : Le défi augmente naturellement au cours du gameplay
+3. **Tolérance aux erreurs** : Gestion robuste des erreurs pour les entrées utilisateur inattendues
+4. **Performance** : Rendu et gestion des événements optimisés pour un gameplay fluide
 
 ## Licence
 
