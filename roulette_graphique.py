@@ -25,6 +25,7 @@ PURPLE = (155, 89, 182)
 ORANGE = (243, 156, 18)
 GRAY = (149, 165, 166)
 RED = (231, 76, 60)
+BLACK = (0, 0, 0)
 
 # Score file
 SCORES_FILE = "web/scores.json"
@@ -338,11 +339,20 @@ class Game:
         self.player1_nickname = ""
         self.player2_nickname = ""
         self.scores_partie = {}
-        self.joueur = 1
+        self.joueur = 1  # Initialiser avec le joueur 1
         self.barillet = []
+        self.music_files = ["background_music.mp3", "background_music1.mp3", "background_music2.mp3" , "background_music3.mp3" , "background_music4.mp3"]
+        self.current_music_index = 0
         self.game_started = False
         self.game_over = False
         self.entering_nicknames = False
+        
+        self.gun_image = pygame.image.load("gun.png")
+        self.gun_image = pygame.transform.scale(self.gun_image, (100, 50))
+        
+        # Initialiser l'image du pistolet en mode miroir si le joueur actif est le joueur 2
+        if self.joueur == 2:
+            self.gun_image = pygame.transform.flip(self.gun_image, True, False)
         
         self.word_challenge_active = False
         self.challenge_word = ""
@@ -407,7 +417,7 @@ class Game:
         self.gun_pos = list(self.gun_original_pos)
     
     def initialize_music(self):
-        music_file = "background_music.mp3"
+        music_file = self.music_files[self.current_music_index]
         
         if os.path.exists(music_file):
             try:
@@ -416,7 +426,7 @@ class Game:
                 pygame.mixer.music.play(-1)
                 self.music_initialized = True
                 if hasattr(self, 'event_log'):
-                    self.event_log.add_message("Background music started.")
+                    self.event_log.add_message(f"Playing: {music_file}")
             except Exception as e:
                 print(f"Error loading music: {e}")
                 self.music_initialized = False
@@ -436,6 +446,11 @@ class Game:
         else:
             pygame.mixer.music.pause()
             self.event_log.add_message("Music disabled")
+            
+    def next_music(self):
+        self.current_music_index = (self.current_music_index + 1) % len(self.music_files)
+        self.initialize_music()
+        self.event_log.add_message(f"Next music: {self.music_files[self.current_music_index]}")
             
     def increase_volume(self):
         self.music_volume = min(1.0, self.music_volume + 0.1)
@@ -465,9 +480,10 @@ class Game:
         self.start_button = Button(button_x, y_start, button_width, button_height, GREEN, "COMMENCER")
         self.tirer_button = Button(button_x, y_start + y_spacing, button_width, button_height, BLUE, "TIRER")
         self.rejouer_button = Button(button_x, y_start + y_spacing*2, button_width, button_height, PURPLE, "REJOUER")
-        self.classement_button = Button(button_x, y_start + y_spacing*3, button_width, button_height, ORANGE, "CLASSEMENT")
-        self.options_button = Button(button_x, y_start + y_spacing*4, button_width, button_height, GRAY, "OPTIONS")
-        self.music_button = Button(button_x, y_start + y_spacing*5, button_width, button_height, LIGHT_BLUE, "MUSIQUE ON/OFF")
+        # Supprimer les boutons "CLASSEMENT" et "OPTIONS"
+        # self.classement_button = Button(button_x, y_start + y_spacing*3, button_width, button_height, ORANGE, "CLASSEMENT")
+        # self.options_button = Button(button_x, y_start + y_spacing*4, button_width, button_height, GRAY, "OPTIONS")
+        self.music_button = Button(button_x, y_start + y_spacing*3, button_width, button_height, LIGHT_BLUE, "MUSIQUE ON/OFF")
         
         self.tirer_button.set_active(False)
         self.rejouer_button.set_active(False)
@@ -478,10 +494,10 @@ class Game:
         self.event_log = EventLog(250, 400, 600, 350)
         self.event_log.add_message("Bienvenue dans le jeu de la Roulette Russe !")
         self.event_log.add_message("Entrez le nombre de balles et cliquez sur COMMENCER.")
-
+    
         self.player1_nickname_input = TextBox(350, 200, 200, 40, font_size=20, max_chars=15)
         self.player2_nickname_input = TextBox(350, 270, 200, 40, font_size=20, max_chars=15)
-
+    
         self.continue_button = Button(0, 0, 200, 40, GREEN, "CONTINUER")
     
     def start_game(self):
@@ -713,16 +729,16 @@ class Game:
     def draw(self):
         shake_offset_x = random.randint(-self.animations["shake_amount"], self.animations["shake_amount"])
         shake_offset_y = random.randint(-self.animations["shake_amount"], self.animations["shake_amount"])
-
+    
         SCREEN.fill(DARK_BLUE)
-
+    
         title_font = pygame.font.SysFont("Impact", 36)
         shadow_surf = title_font.render("ROULETTE RUSSE", True, (0, 0, 0))
         title_surf = title_font.render("ROULETTE RUSSE", True, RED)
-
+    
         SCREEN.blit(shadow_surf, (SCREEN_WIDTH // 2 - shadow_surf.get_width() // 2 + 2, 32))
         SCREEN.blit(title_surf, (SCREEN_WIDTH // 2 - title_surf.get_width() // 2, 30))
-
+    
         # Dessiner les éléments standard uniquement si nous ne sommes PAS en train d'entrer des pseudos
         if not self.entering_nicknames:
             if self.game_started and not self.game_over:
@@ -731,170 +747,168 @@ class Game:
                 subtitle_text = f"Tour de {current_nickname}"
                 subtitle_surf = subtitle_font.render(subtitle_text, True, WHITE)
                 SCREEN.blit(subtitle_surf, (SCREEN_WIDTH // 2 - subtitle_surf.get_width() // 2, 80))
-
+    
             # Panneau de contrôles
             pygame.draw.rect(SCREEN, LIGHT_BLUE, pygame.Rect(30, 100, 220, 400), border_radius=10)
             controls_label = pygame.font.SysFont("Arial", 18, bold=True).render("CONTRÔLES", True, WHITE)
             SCREEN.blit(controls_label, (130 - controls_label.get_width() // 2, 110))
-
+    
             label_font = pygame.font.SysFont("Arial", 16)
             nb_balles_label = label_font.render("Nombre de balles (1+):", True, WHITE)
             SCREEN.blit(nb_balles_label, (50, 120))
-
+    
             # Afficher la textbox du nombre de balles
             self.nb_balles_textbox.draw(SCREEN)
-
+    
             # Dessiner tous les boutons
             self.start_button.draw(SCREEN)
             self.tirer_button.draw(SCREEN)
             self.rejouer_button.draw(SCREEN)
-            self.classement_button.draw(SCREEN)
-            self.options_button.draw(SCREEN)
             self.music_button.draw(SCREEN)
-
+    
             # Zone de jeu
             pygame.draw.rect(SCREEN, LIGHT_BLUE, pygame.Rect(280, 120, 570, 250), border_radius=10)
             pygame.draw.rect(SCREEN, WHITE, pygame.Rect(280, 120, 570, 250), 1, border_radius=10)
             pygame.draw.ellipse(SCREEN, (40, 55, 70), pygame.Rect(350, 210, 430, 120))
             pygame.draw.ellipse(SCREEN, (35, 50, 65), pygame.Rect(350, 210, 430, 120), 2)
-
+    
             # Joueurs et arme
             self.player1.draw(SCREEN)
             self.player2.draw(SCREEN)
-
-            gun_surface = pygame.Surface((50, 50), pygame.SRCALPHA)
-            pygame.draw.ellipse(gun_surface, GRAY, pygame.Rect(0, 0, 50, 50))
-
-            gun_text = pygame.font.SysFont("Arial", 28).render("🔫", True, WHITE)
-            gun_text_rect = gun_text.get_rect(center=(25, 25))
-            gun_surface.blit(gun_text, gun_text_rect)
-
+    
+            # Inverser l'image du pistolet horizontalement en fonction du joueur actif
+            if self.joueur == 1:
+                gun_image = self.gun_image
+            else:
+                gun_image = pygame.transform.flip(self.gun_image, True, False)
+    
+            # Dessiner l'image du pistolet
             if self.animations["gun_angle"] != 0:
-                rotated_gun = pygame.transform.rotate(gun_surface, self.animations["gun_angle"])
+                rotated_gun = pygame.transform.rotate(gun_image, self.animations["gun_angle"])
                 rotated_rect = rotated_gun.get_rect(center=self.gun_rect.center)
                 SCREEN.blit(rotated_gun, rotated_rect)
             else:
-                SCREEN.blit(gun_surface, self.gun_rect)
-
+                SCREEN.blit(gun_image, self.gun_rect)
+    
             # Indicateur de joueur actif
             if self.game_started and not self.game_over:
                 indicator_pos = (self.player1.x, self.player1.y - 80) if self.joueur == 1 else (
                 self.player2.x, self.player2.y - 80)
-
+    
                 pulse = (pygame.time.get_ticks() % 1000) / 1000
                 pulse_size = 8 + int(4 * pulse)
-
+    
                 pygame.draw.circle(SCREEN, RED, indicator_pos, pulse_size)
                 pygame.draw.circle(SCREEN, WHITE, indicator_pos, pulse_size, 1)
-
+    
             # Scores
             score_font = pygame.font.SysFont("Arial", 16, bold=True)
             score_title = score_font.render("SCORES", True, ORANGE)
             SCREEN.blit(score_title, (130 - score_title.get_width() // 2, 505))
-
+    
             if self.game_started:
                 score1_color = BLUE if self.joueur == 1 and not self.game_over else WHITE
                 score2_color = RED if self.joueur == 2 and not self.game_over else WHITE
-
+    
                 label_font = pygame.font.SysFont("Arial", 16)
                 score1 = label_font.render(
                     f"{self.player1_nickname}: {self.scores_partie.get(self.player1_nickname, 0)}", True, score1_color)
                 score2 = label_font.render(
                     f"{self.player2_nickname}: {self.scores_partie.get(self.player2_nickname, 0)}", True, score2_color)
-
+    
                 SCREEN.blit(score1, (130 - score1.get_width() // 2, 530))
                 SCREEN.blit(score2, (130 - score2.get_width() // 2, 555))
-
+    
             # Aide
             help_font = pygame.font.SysFont("Arial", 12)
-            help_text = help_font.render("Flèches ↑/↓: Volume | 0: Musique", True, WHITE)
+            help_text = help_font.render("Flèches ↑/↓: Volume | 0: Musique | →: Musique suivante", True, WHITE)
             SCREEN.blit(help_text, (130 - help_text.get_width() // 2, 580))
-
+    
             # Game over
             if self.game_over:
                 go_font = pygame.font.SysFont("Impact", 40)
                 winner_nickname = self.player2_nickname if self.joueur == 1 else self.player1_nickname
                 go_text = "GAME OVER" if not self.barillet else f"{winner_nickname} GAGNE!"
-
+    
                 go_shadow = go_font.render(go_text, True, (0, 0, 0))
                 go_surface = go_font.render(go_text, True, ORANGE)
-
+    
                 go_x = 280 + 570 // 2 - go_surface.get_width() // 2
                 go_y = 120 + 250 // 2 - go_surface.get_height() // 2
-
+    
                 SCREEN.blit(go_shadow, (go_x + 2, go_y + 2))
                 SCREEN.blit(go_surface, (go_x, go_y))
-
+    
         # Afficher le panneau de saisie des pseudos (par-dessus tout le reste)
         if self.entering_nicknames:
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 150))
             SCREEN.blit(overlay, (0, 0))
-
+    
             input_box = pygame.Rect(280, 150, 570, 300)
             pygame.draw.rect(SCREEN, DARK_BLUE, input_box, border_radius=10)
             pygame.draw.rect(SCREEN, LIGHT_BLUE, input_box, 2, border_radius=10)
-
+    
             font = pygame.font.SysFont("Arial", 28, bold=True)
             title = font.render("ENTREZ VOS PSEUDOS", True, WHITE)
             SCREEN.blit(title, (input_box.centerx - title.get_width() // 2, 170))
-
+    
             font = pygame.font.SysFont("Arial", 20)
             player1_label = font.render("Joueur 1:", True, BLUE)
             player2_label = font.render("Joueur 2:", True, RED)
-
+    
             SCREEN.blit(player1_label, (input_box.x + 50, 210))
             SCREEN.blit(player2_label, (input_box.x + 50, 280))
-
+    
             self.player1_nickname_input.draw(SCREEN)
             self.player2_nickname_input.draw(SCREEN)
-
+    
             # Mettez à jour la position du bouton continue
             self.continue_button.rect.x = input_box.centerx - 100
             self.continue_button.rect.y = input_box.bottom - 100 
             self.continue_button.draw(SCREEN)
-
+    
         # Défi de mot (toujours par-dessus tout)
         if self.word_challenge_active:
             elapsed = (pygame.time.get_ticks() - self.challenge_timer) / 1000
             time_left = max(0, self.challenge_time_limit - elapsed)
-
+    
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 150))
             SCREEN.blit(overlay, (0, 0))
-
+    
             challenge_box = pygame.Rect(280, 150, 570, 200)
             pygame.draw.rect(SCREEN, DARK_BLUE, challenge_box, border_radius=10)
             pygame.draw.rect(SCREEN, LIGHT_BLUE, challenge_box, 2, border_radius=10)
-
+    
             font = pygame.font.SysFont("Arial", 22, bold=True)
             current_nickname = self.player1_nickname if self.joueur == 1 else self.player2_nickname
             instructions = font.render(f"{current_nickname}, TAPEZ CE MOT POUR SURVIVRE:", True, WHITE)
             SCREEN.blit(instructions, (challenge_box.centerx - instructions.get_width() // 2, 170))
-
+    
             word_font = pygame.font.SysFont("Arial", 36, bold=True)
             word_surf = word_font.render(self.challenge_word, True, ORANGE)
             SCREEN.blit(word_surf, (challenge_box.centerx - word_surf.get_width() // 2, 210))
-
+    
             input_font = pygame.font.SysFont("Arial", 28)
             input_surf = input_font.render(self.challenge_input, True, GREEN)
             SCREEN.blit(input_surf, (challenge_box.centerx - input_surf.get_width() // 2, 270))
-
+    
             timer_text = f"Temps restant: {time_left:.1f}s"
             timer_font = pygame.font.SysFont("Arial", 20)
             timer_color = RED if time_left < 2 else WHITE
             timer_surf = timer_font.render(timer_text, True, timer_color)
             SCREEN.blit(timer_surf, (challenge_box.centerx - timer_surf.get_width() // 2, 310))
-
+    
         # Journal d'événements (toujours visible)
         self.event_log.draw(SCREEN)
-
+    
         # Effet de fondu
         if self.animations["fade_alpha"] > 0:
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, self.animations["fade_alpha"]))
             SCREEN.blit(overlay, (0, 0))
-
+    
         pygame.display.flip()
     
     def handle_event(self, event):
@@ -904,13 +918,10 @@ class Game:
         
         # Gestion prioritaire des saisies spéciales
         if self.entering_nicknames:
-           
-
             self.player1_nickname_input.handle_event(event)
             self.player2_nickname_input.handle_event(event)
             self.continue_button.handle_event(event)
-
-
+    
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
                 if self.continue_button.is_hovered(pos):
@@ -956,10 +967,6 @@ class Game:
                 elif self.rejouer_button.is_hovered(pos) and self.rejouer_button.active:
                     self.play_sound("click")
                     self.restart()
-                elif self.classement_button.is_hovered(pos):
-                    self.show_classement()
-                elif self.options_button.is_hovered(pos):
-                    self.show_options()
                 elif self.music_button.is_hovered(pos):
                     self.toggle_music()
         
@@ -970,13 +977,13 @@ class Game:
                 self.decrease_volume()
             elif event.key == pygame.K_0:
                 self.toggle_music()
+            elif event.key == pygame.K_RIGHT:  # Add key to switch to the next music
+                self.next_music()
         
         # Traitement normal des composants d'interface
         self.start_button.handle_event(event)
         self.tirer_button.handle_event(event)
         self.rejouer_button.handle_event(event)
-        self.classement_button.handle_event(event)
-        self.options_button.handle_event(event)
         self.music_button.handle_event(event)
         self.nb_balles_textbox.handle_event(event)
         
@@ -1003,6 +1010,7 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error: {e}")
     finally:
-        pygame.mixer.music.stop()
+        if pygame.mixer.get_init():  # Vérifiez si le mixer est initialisé
+            pygame.mixer.music.stop()
         pygame.quit()
         sys.exit()

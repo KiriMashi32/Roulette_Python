@@ -152,7 +152,7 @@
             sortedScores.forEach((item, index) => {
                 const row = table.insertRow(-1);
                 row.insertCell(0).textContent = index + 1;
-                row.insertCell(1).textContent = 'Joueur ' + item.joueur;
+                row.insertCell(1).textContent = item.joueur;
                 row.insertCell(2).textContent = item.score;
             });
         }
