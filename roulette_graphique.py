@@ -758,8 +758,8 @@ class Game:
         SCREEN.fill(DARK_BLUE)
     
         title_font = pygame.font.SysFont("Impact", 36)
-        shadow_surf = title_font.render("ROULETTE RUSSE", True, (0, 0, 0))
-        title_surf = title_font.render("ROULETTE RUSSE", True, RED)
+        shadow_surf = title_font.render("ROULETTE PAS TRES RUSSE", True, (0, 0, 0))
+        title_surf = title_font.render("ROULETTE PAS TRES RUSSE", True, RED)
     
         SCREEN.blit(shadow_surf, (SCREEN_WIDTH // 2 - shadow_surf.get_width() // 2 + 2, 32))
         SCREEN.blit(title_surf, (SCREEN_WIDTH // 2 - title_surf.get_width() // 2, 30))
