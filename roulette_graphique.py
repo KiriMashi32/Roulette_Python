@@ -693,6 +693,8 @@ class Game:
         current_nickname = self.player1_nickname if self.joueur == 1 else self.player2_nickname
         self.event_log.add_message(f"{current_nickname}: Écrivez '{self.challenge_word}' pour survivre!")
         
+        self.tirer_button.set_active(False)
+        
     def handle_word_challenge(self):
         if not self.word_challenge_active:
             return
@@ -706,6 +708,10 @@ class Game:
             current_nickname = self.player1_nickname if self.joueur == 1 else self.player2_nickname
             self.event_log.add_message(f"Temps écoulé! {current_nickname} n'a pas écrit '{self.challenge_word}' assez rapidement.")
             self.eliminate_current_player()
+            
+            # Réactiver le bouton "TIRER" si le jeu n'est pas terminé
+            if not self.game_over:
+                self.tirer_button.set_active(True)
     
     def restart(self):
         self.game_started = False
@@ -967,6 +973,9 @@ class Game:
                     self.joueur = 2 if self.joueur == 1 else 1
                     next_nickname = self.player1_nickname if self.joueur == 1 else self.player2_nickname
                     self.event_log.add_message(f"C'est au tour de {next_nickname}.")
+                    
+                    # Réactiver le bouton "TIRER"
+                    self.tirer_button.set_active(True)
             
             # Mise à jour immédiate de l'affichage
             self.draw()
