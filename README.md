@@ -112,4 +112,8 @@ Le jeu a été développé avec ces principes à l'esprit :
 
 ## Licence
 
+<<<<<<< HEAD
 Ce projet est sous licence MIT - voir le fichier LICENSE pour plus de détails.
+=======
+Ce projet est sous licence MIT - voir le fichier LICENSE pour plus de détails.
+>>>>>>> 8653257c7f84ee9458db0f8aee94ec6dd1fddc75
