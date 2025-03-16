@@ -904,13 +904,12 @@ class Game:
         
         # Gestion prioritaire des saisies spéciales
         if self.entering_nicknames:
-            print("Affichage des champs de pseudo...")
+           
 
             self.player1_nickname_input.handle_event(event)
             self.player2_nickname_input.handle_event(event)
             self.continue_button.handle_event(event)
 
-            print(f"Coordonnées des champs : P1={self.player1_nickname_input.rect.topleft}, P2={self.player2_nickname_input.rect.topleft}")
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
