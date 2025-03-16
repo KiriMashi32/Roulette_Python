@@ -99,12 +99,12 @@ Le jeu est construit avec une architecture modulaire comprenant ces composants p
 - **Journal d'événements** : Conception d'une interface défilante réactive avec un impact minimal sur les performances
 - **Gestion des états** : Gestion des transitions entre plusieurs états du jeu sans problèmes
 
-### Philosophie de conception
+### Caractéristiques de gameplay
 
-Le jeu a été développé avec ces principes à l'esprit :
+Le jeu a été construit autour de ces éléments clés :
 
-1. **Retour visuel** : Chaque action fournit une réponse visuelle et auditive immédiate
-2. **Difficulté progressive** : Le défi augmente naturellement au cours du gameplay
-3. **Tolérance aux erreurs** : Gestion robuste des erreurs pour les entrées utilisateur inattendues
-4. **Performance** : Rendu et gestion des événements optimisés pour un gameplay fluide
+1. **Retour immédiat** : Sons et animations pour chaque action du joueur
+2. **Défi croissant** : Le temps disponible pour taper les mots diminue de 0.1 seconde après chaque mot réussi
+3. **Solidité technique** : Système résistant aux erreurs de saisie et aux actions imprévues
+4. **Expérience fluide** : Animations et interactions optimisées pour éviter les ralentissements
 
