@@ -955,7 +955,7 @@ class Game:
                 self.challenge_input = self.challenge_input[:-1]
             elif event.key == pygame.K_RETURN:
                 pass
-            elif event.unicode.isalpha() or event.unicode == ' ':
+            elif event.unicode.isalpha() or event.unicode == ' ' or event.unicode == '-':
                 self.challenge_input += event.unicode
                 if self.challenge_input.lower() == self.challenge_word.lower():
                     self.word_challenge_active = False

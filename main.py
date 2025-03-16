@@ -2,8 +2,10 @@ import random
 import json
 import os
 from datetime import datetime
+import requests
 
 SCORES_FILE = "scores.json"
+API_URL = "https://random-word-api.herokuapp.com/word?number=1&lang=fr"
 
 def init_barillet(nb_balles=1):
     barillet = [0] * (6 - nb_balles) + [1] * nb_balles
@@ -19,13 +21,34 @@ def tirer(barillet, joueur):
         print("Clic... Rien ne se passe.")
         return False  # La partie continue
 
+def get_random_word():
+    try:
+        response = requests.get(API_URL)
+        if response.status_code == 200:
+            return response.json()[0]
+        else:
+            print(f"Erreur lors de la récupération du mot : {response.status_code}")
+            return None
+    except Exception as e:
+        print(f"Exception lors de la récupération du mot : {e}")
+        return None
+
+def defis_mot(joueur):
+    mot = get_random_word() or random.choice(["bonjour", "merci", "voiture", "maison", "chat", "chien", "livre"])
+    print(f"Défi de mot pour le joueur {joueur} : Tapez '{mot}' pour survivre.")
+    saisie = input("Votre saisie : ")
+    return saisie.lower() == mot.lower()
+
 def jouer(nb_balles):
     barillet = init_barillet(nb_balles)
     joueur = 1
     while barillet:
         input(f"Joueur {joueur}, appuyez sur Entrée pour tirer.")
         if tirer(barillet, joueur):
-            return joueur  # Retourner le joueur éliminé
+            if not defis_mot(joueur):
+                return joueur  # Retourner le joueur éliminé
+            else:
+                print(f"Le joueur {joueur} a survécu au défi de mot !")
         joueur = 2 if joueur == 1 else 1  # Changer de joueur
     return None  # Aucun joueur éliminé
 
