@@ -169,15 +169,33 @@
             recentGames.forEach(game => {
                 const row = table.insertRow(-1);
                 row.insertCell(0).textContent = game.date;
-                row.insertCell(1).textContent = game.scores['1'] || 0;
-                row.insertCell(2).textContent = game.scores['2'] || 0;
                 
-                // Surligner le perdant (celui qui a un point)
-                if (game.scores['1'] > 0) {
-                    row.cells[1].classList.add('highlight');
-                }
-                if (game.scores['2'] > 0) {
-                    row.cells[2].classList.add('highlight');
+                // Utiliser les pseudos au lieu des identifiants numériques
+                // Si les clés sont des objets avec nom et score
+                const joueurs = Object.keys(game.scores);
+                
+                if (joueurs.length >= 2) {
+                    row.insertCell(1).textContent = joueurs[0];  // Nom du joueur 1
+                    row.insertCell(2).textContent = joueurs[1];  // Nom du joueur 2
+                    
+                    // Surligner le perdant (celui qui a un point)
+                    if (game.scores[joueurs[0]] > 0) {
+                        row.cells[1].classList.add('highlight');
+                    }
+                    if (game.scores[joueurs[1]] > 0) {
+                        row.cells[2].classList.add('highlight');
+                    }
+                } else {
+                    // Fallback pour compatibilité avec l'ancien format
+                    row.insertCell(1).textContent = game.scores['1'] || 0;
+                    row.insertCell(2).textContent = game.scores['2'] || 0;
+                    
+                    if (game.scores['1'] > 0) {
+                        row.cells[1].classList.add('highlight');
+                    }
+                    if (game.scores['2'] > 0) {
+                        row.cells[2].classList.add('highlight');
+                    }
                 }
             });
         }

@@ -27,7 +27,7 @@ GRAY = (149, 165, 166)
 RED = (231, 76, 60)
 
 # Score file
-SCORES_FILE = "scores.json"
+SCORES_FILE = "web/scores.json"
 
 # Sound effects paths
 SOUNDS = {
@@ -851,7 +851,7 @@ class Game:
 
             # Mettez à jour la position du bouton continue
             self.continue_button.rect.x = input_box.centerx - 100
-            self.continue_button.rect.y = input_box.bottom - 60
+            self.continue_button.rect.y = input_box.bottom - 100 
             self.continue_button.draw(SCREEN)
 
         # Défi de mot (toujours par-dessus tout)
