@@ -47,8 +47,10 @@ git clone https://github.com/KiriMashi32/Roulette_Python
 # Installez les dépendances requises
 pip install pygame requests
 
-# Lancez le jeu
+# Lancez le jeu en version console
 python main.py
+
+# Lancez le jeu en version graphique
 ```
 
 ## Architecture
