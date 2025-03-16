@@ -1,4 +1,4 @@
-# Roulette Russe Adventure
+# Roulette Pas Très Russe
 
 <div align="center">
 
@@ -28,7 +28,7 @@
 
 ## Gameplay
 
-Roulette Russe Adventure offre une version moderne du concept classique de la roulette russe :
+Roulette Pas Très Russe offre une version moderne du concept classique de la roulette russe :
 
 1. **Configuration** : Les joueurs entrent leurs pseudos et sélectionnent le nombre de balles pour la partie
 2. **Tour par tour** : Les joueurs alternent pour appuyer sur la détente d'un revolver virtuel
@@ -47,8 +47,10 @@ git clone https://github.com/KiriMashi32/Roulette_Python
 # Installez les dépendances requises
 pip install pygame requests
 
-# Lancez le jeu
+# Lancez le jeu en version console
 python main.py
+
+# Lancez le jeu en version graphique
 ```
 
 ## Architecture
