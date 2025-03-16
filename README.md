@@ -51,6 +51,7 @@ pip install pygame requests
 python main.py
 
 # Lancez le jeu en version graphique
+python roulette_graphique.py
 ```
 
 ## Architecture
