@@ -36,9 +36,7 @@ Roulette Russe Adventure offre une version moderne du concept classique de la ro
 4. **Score** : Les joueurs gagnent des points lorsque leurs adversaires sont éliminés
 5. **Classement global** : Les performances sont suivies à travers les sessions dans un tableau des scores persistant
 
-<div align="center">
-  <img src="public/gameplay-diagram.png" alt="Diagramme de gameplay" width="650"/>
-</div>
+![Diagramme de Gameplay](https://www.plantuml.com/plantuml/png/pPCzyjCm4CLxdM8lG87A5CoV951a9WtX0egydeZHXrcjFCCHk0KbFeSlXfJns2WcanGfS2VjRzy-wSblaHLnSbOepO7W418cUb-jfEWoOxJfb6SuOAhMNx0FjaUgDlVOccDW8IOzUFUXD6xWasT2WYvYQi9KbNUhTUzf72ngDi7x3FdWpeJG89oLjHXNOhlWMqCkexaAsProus-cJ0eRGWUxY_gU43Wa4f2_PTnyfWryxBhq0mbYoZ8Acd5Wz8pN1cKPjcKsDCf7iCK9cRpcKYxVB5H4fplPm7uSd2Aw6YkAhIcdS65fcz3IDRdAJjhMw4jfgja9g2PyLTqQB7QBg0v4g9VzUmDFYNhJ4yuWseXGAEEVrHX_MkEC7uT5n3TY5jjEzmMzQN1rQRKRPJnaCghKYh-5Rb_9vymrwJPM-L_6AX_5AbySgtn1hF9biSg7iSf_nbeOaNUh1t94Pa8OVy6tp815Y3eGrfnyXbl_Rzgg6D6XvvNS7UmjUqpE_W40)
 
 ## Installation
 
